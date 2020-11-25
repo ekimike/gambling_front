@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Table from 'react-bootstrap/Table';
 
@@ -7,10 +7,14 @@ function CurrentGamerStatsComponent(props) {
     const [currentGamerName, setCurrentGamerName] = useState('');
     const [currentGamerMatches, setCurrentGamerMatches] = useState('');
 
+    // const [currentGamerName, currentGamerMatches] = 
+
     console.log('props de currentGamerStats: ', props.userNameResponsex, ', x> ', props.userRoundsx);
 
-    // setCurrentGamerName(props.userNameResponsex);
-    // setCurrentGamerMatches(props.userRoundsx);
+    useEffect(() => {
+        setCurrentGamerName(props.userNameResponsex);
+        setCurrentGamerMatches(props.userRoundsx);    
+    }, [props.userNameResponsex]);
 
     return(<>
         <Table>

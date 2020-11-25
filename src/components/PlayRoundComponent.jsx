@@ -75,7 +75,7 @@ export default class PlayRoundComponent extends React.Component {
             <form autoComplete="off" onSubmit={this.playGameSubmit}>
                 <div>
                     <label>
-                        Name: <input type="text" value={this.state.userName} onChange={this.playGameChange} autoFocus={true}/>
+                        Name: <input type="text" required value={this.state.userName} onChange={this.playGameChange} autoFocus={true}/>
                     </label>
                     <input type="submit" value="Play Round" />
                 </div>
@@ -83,24 +83,10 @@ export default class PlayRoundComponent extends React.Component {
 
 
             <h1>Current User stats</h1>    
-            {/* <CurrentGamerStatsComponent userNameResponsex={this.state.userNameResponse} userRoundsx={this.state.userRounds}/> */}
-            <Table striped={true} bordered={true} hover>
-                <thead>
-                    <tr>
-                        <th>User Name</th>
-                        <th>Rounds</th>
-                        <th>Reset stats</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{this.state.userNameResponse}</td>
-                        <td>{this.state.userRounds}</td>
+            <CurrentGamerStatsComponent userNameResponsex={this.state.userNameResponse} userRoundsx={this.state.userRounds}/>
+
                         {/* <td><button onClick={this.handleClick.bind(this, this.state.userNameResponse)}>Reset</button></td> */}
-                        <td><ResetUserStatsComponent value={this.state.userNameResponse} /></td>
-                    </tr>
-                </tbody>
-            </Table>
+                        
 
             <h1>Game stats </h1>
             <MatchResumeComponent />
