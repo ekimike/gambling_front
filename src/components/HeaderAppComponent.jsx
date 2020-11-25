@@ -1,9 +1,18 @@
-function HeaderAppComponent() {
-    return (
-        <div className="headerAppComponent">
-            HEADER
-        </div>
-    )
+import React from 'react';
+import Container from 'react-bootstrap/Container';
+
+export default class HeaderAppComponent extends React.Component {
+    render() {
+        return (<>
+            <Container>
+                
+                        <div className="headerAppComponent">
+                            APPLICATION
+                        </div>
+                
+            </Container>
+            </>
+        )
+    }
 }
 
-export default HeaderAppComponent;

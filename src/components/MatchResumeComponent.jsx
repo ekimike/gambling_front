@@ -1,33 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
-export default class MatchResumeComponent extends React.Component {
+import Table from 'react-bootstrap/Table';
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            games: []
-        };  
-    }
+function MatchResumeComponent() {
 
-    componentDidMount() {
+    const [totalRoundsPlayed, setTotalRoundsPlayed] = useState('');
+    const [totalWinsFirstPlayer, setTotalWinsFirstPlayer] = useState('');
+    const [totalWinsSecondPlayer, setTotalWinsSecondPlayer] = useState('');
+    const [totalDraws, setTotalDraws] = useState('');
+    
         axios.get(`http://localhost:8080/match/resume`)
-            .then(res => res.data )
-            .then((data) => {
-                this.setState({ games: data })
-            })
-            .catch(this.setState({games: 'Something went wrong' }))
-    }
-
-    render() {
-        return(<>
-            <div>
-                <h1>Games</h1>
-                <p> HOLA: { this.state.games.totalDraws }  </p>
-            </div>
-            </>
-        )
-    }
+        .then(resume => resume.data)
+        .then((resumeData) => {
+            setTotalRoundsPlayed(resumeData.numberRoundsPlayed)
+            setTotalWinsFirstPlayer(resumeData.winsFirstPlayer)
+            setTotalWinsSecondPlayer(resumeData.winsSecondPlayer)
+            setTotalDraws(resumeData.totalDraws)
+        }).catch(function (error) {
+            console.log('Error de axuios: ', error)
+        })
 
     
+        return(<>
+            <Table>
+                <thead>
+                    <tr>
+                        <th>Total rounds played</th>
+                        <th>total wins first player</th>
+                        <th>total wins second player</th>
+                        <th>total draws</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{totalRoundsPlayed}</td>
+                        <td>{totalWinsFirstPlayer}</td>
+                        <td>{totalWinsSecondPlayer}</td>
+                        <td>{totalDraws}</td>
+                    </tr>
+                </tbody>
+            </Table>
+            </>
+        )
+    
 }
+
+export default MatchResumeComponent;

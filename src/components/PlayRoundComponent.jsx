@@ -2,8 +2,11 @@ import React from 'react';
 import axios from 'axios';
 
 import Table from 'react-bootstrap/Table';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+import MatchResumeComponent from '../components/MatchResumeComponent';
+import ResetUserStatsComponent from '../components/ResetUserStatsComponent';
+import CurrentGamerStatsComponent from '../components/CurrentGamerStatsComponent';
 
 export default class PlayRoundComponent extends React.Component {
 
@@ -13,15 +16,13 @@ export default class PlayRoundComponent extends React.Component {
             userName: '',
             userRounds: '',
             userNameResponse: '',
-            totalRoundsPlayed: '',
-            totalWinsFirstPlayer: '',
-            totalWinsSecondPlayer: '',
-            totalDraws: '',
             firstPlayerChoose: '',
             secondPlayerChoose: 'Rock',
             roundResult: '',
             roundUsername: '',
+            playersResumeDataX: []
         };
+        
 
         this.playGameChange = this.playGameChange.bind(this);
         this.playGameSubmit = this.playGameSubmit.bind(this);
@@ -40,27 +41,14 @@ export default class PlayRoundComponent extends React.Component {
             responseUser: 'WRONG'
         }))
 
-        axios.get(`http://localhost:8080/match/resume`)
-        .then(resume => resume.data)
-        .then((resumeData) => {
-            this.setState({
-                totalRoundsPlayed: resumeData.numberRoundsPlayed,
-                totalWinsFirstPlayer: resumeData.winsFirstPlayer,
-                totalWinsSecondPlayer: resumeData.winsSecondPlayer,
-                totalDraws: resumeData.totalDraws
-            })
-        }).catch(console.log('cannot get resume'))
-
-        // players move
         axios.get(`http://localhost:8080/match/players`)
         .then(playersResume => playersResume.data)
         .then((playersResumeData) => {
-
-            console.log('------>>>>', playersResumeData)
+            // console.log('------>>>>', playersResumeData)
+            this.setState({ playersResumeDataX : playersResumeData})
             for(var foo in playersResumeData) {
-                console.log('foo: ', foo, ', bar: ', playersResumeData[foo].gameDetail[0].firstPlayerSelection);
                 for(var bar in playersResumeData[foo].gameDetail) {
-                    console.log('elliot: ', playersResumeData[foo].gameDetail[bar].firstPlayerSelection);
+                    // console.log('elliot: ', playersResumeData[foo].gameDetail[bar].firstPlayerSelection);
                     this.setState({
                         roundUsername: foo,
                         firstPlayerChoose: playersResumeData[foo].gameDetail[bar].firstPlayerSelection,
@@ -70,7 +58,7 @@ export default class PlayRoundComponent extends React.Component {
                 }
             }
         })
-        
+
         event.preventDefault();
     }
 
@@ -95,6 +83,7 @@ export default class PlayRoundComponent extends React.Component {
 
 
             <h1>Current User stats</h1>    
+            {/* <CurrentGamerStatsComponent userNameResponsex={this.state.userNameResponse} userRoundsx={this.state.userRounds}/> */}
             <Table striped={true} bordered={true} hover>
                 <thead>
                     <tr>
@@ -107,30 +96,14 @@ export default class PlayRoundComponent extends React.Component {
                     <tr>
                         <td>{this.state.userNameResponse}</td>
                         <td>{this.state.userRounds}</td>
-                        <td><button onClick={this.handleClick.bind(this, this.state.userNameResponse)}>Reset</button></td>
+                        {/* <td><button onClick={this.handleClick.bind(this, this.state.userNameResponse)}>Reset</button></td> */}
+                        <td><ResetUserStatsComponent value={this.state.userNameResponse} /></td>
                     </tr>
                 </tbody>
             </Table>
 
-            <h1>Game stats</h1>
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Total rounds played</th>
-                        <th>total wins first player</th>
-                        <th>total wins second player</th>
-                        <th>total draws</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{this.state.totalRoundsPlayed}</td>
-                        <td>{this.state.totalWinsFirstPlayer}</td>
-                        <td>{this.state.totalWinsSecondPlayer}</td>
-                        <td>{this.state.totalDraws}</td>
-                    </tr>
-                </tbody>
-            </Table>
+            <h1>Game stats </h1>
+            <MatchResumeComponent />
 
             <h1>Rounds played</h1>    
             <Table>
@@ -144,7 +117,7 @@ export default class PlayRoundComponent extends React.Component {
                 </thead>
                 <tbody>
                     <tr>
-                    <td>{this.state.roundUsername}</td>
+                        <td>{this.state.roundUsername}</td>
                         <td>{this.state.firstPlayerChoose}</td>
                         <td>{this.state.secondPlayerChoose}</td>
                         <td>{this.state.roundResult}</td>
@@ -157,14 +130,15 @@ export default class PlayRoundComponent extends React.Component {
 
     handleClick(user, e) {
         e.preventDefault();
-        console.log('prevent default: ', user);
+        console.log('user: ', user, ', e: ', e);
+        <ResetUserStatsComponent value={user} />
         
-        axios.patch(`http://localhost:8080/match/player/${user}/restart`)
-        .then(res => res.data)
-        .then((data) => {
-            console.log('UPDATE MAS NA')
-        }).catch(this.setState({
-            responseUser: 'WRONG'
-        }))
+        // axios.patch(`http://localhost:8080/match/player/${user}/restart`)
+        // .then(res => res.data)
+        // .then((data) => {
+        //     console.log('UPDATE MAS NA')
+        // }).catch(this.setState({
+        //     responseUser: 'WRONG'
+        // }))
     }
 }
